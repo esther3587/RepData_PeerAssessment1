@@ -7,12 +7,18 @@ output:
 
 
 ## Loading and preprocessing the data
-
+```{r echo=TRUE}
+activity <- read.csv("activity.csv")
+```
 
 
 ## What is mean total number of steps taken per day?
-
-
+```{r echo=TRUE}
+totalstep <- as.data.frame(xtabs(steps ~ date,activity))
+hist(totalstep$Freq)
+mean(totalstep$Freq)
+median(totalstep$Freq)
+```
 
 ## What is the average daily activity pattern?
 
