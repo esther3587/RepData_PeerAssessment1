@@ -14,7 +14,7 @@ activity <- read.csv("activity.csv")
 
 ```r
 totalstep <- aggregate(steps ~ date, activity, sum)
-hist(totalstep$steps)
+hist(totalstep$steps,xlab = "Total Steps per Day",main = "Histogram of Total Steps")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
@@ -84,12 +84,29 @@ sum(is.na(activity))
 
 ```r
 activity_impute <- activity
-activity_impute$steps <- impute(activity$steps) 
+activity_impute$steps <- impute(activity$steps, fun = mean) 
 totalstep_impute <- aggregate(steps ~ date, activity_impute, sum)
 hist(totalstep_impute$steps,xlab = "Total Steps per Day (impute missing value)",main = "Histogram of Total Steps")
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
+mean(totalstep_impute$steps) 
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+median(totalstep_impute$steps)
+```
+
+```
+## [1] 10766.19
+```
+The plot looks slightly different than before imputing missing numbers.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
