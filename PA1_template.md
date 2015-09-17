@@ -98,5 +98,9 @@ hist(totalstep_impute$steps,xlab = "Total Steps per Day (impute missing value)",
 activity$week <- weekdays(as.Date(activity$date))
 weekdays1 <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
 activity$wDay <- factor(activity$week %in% weekdays1, levels = c(FALSE,TRUE), labels = c('weekend','weekday'))
+dayavg_activity <- aggregate(steps ~ interval + wDay, data=activity,mean)
+ggplot (dayavg_activity, aes(interval,steps)) + geom_line() + facet_grid(wDay ~.)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
