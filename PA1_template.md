@@ -3,6 +3,7 @@
 
 ## Loading and preprocessing the data
 
+
 ```r
 activity <- read.csv("activity.csv")
 ```
@@ -10,39 +11,68 @@ activity <- read.csv("activity.csv")
 
 ## What is mean total number of steps taken per day?
 
+
 ```r
-totalstep <- as.data.frame(xtabs(steps ~ date,activity))
-hist(totalstep$Freq)
+totalstep <- aggregate(steps ~ date, activity, sum)
+hist(totalstep$steps)
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
 
 ```r
-mean(totalstep$Freq)
+mean(totalstep$steps) 
 ```
 
 ```
-## [1] 9354.23
+## [1] 10766.19
 ```
 
 ```r
-median(totalstep$Freq)
+median(totalstep$steps)
 ```
 
 ```
-## [1] 10395
+## [1] 10765
 ```
 
 ## What is the average daily activity pattern?
 
 
 ```r
-plot(activity$interval,activity$steps,type="l")
+steps_per_interval <- aggregate(steps~interval,activity,mean)
+plot(steps_per_interval,type='l')
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
+```r
+steps_per_interval$interval[which.max(steps_per_interval$steps)]
+```
+
+```
+## [1] 835
+```
+
 ## Imputing missing values
+
+
+```r
+library(Hmisc)
+```
+
+```
+## Loading required package: grid
+## Loading required package: lattice
+## Loading required package: survival
+## Loading required package: Formula
+## Loading required package: ggplot2
+## 
+## Attaching package: 'Hmisc'
+## 
+## The following objects are masked from 'package:base':
+## 
+##     format.pval, round.POSIXt, trunc.POSIXt, units
+```
 
 ```r
 sum(is.na(activity))
@@ -51,7 +81,18 @@ sum(is.na(activity))
 ```
 ## [1] 2304
 ```
+
+```r
+activity_impute <- activity
+activity_impute$steps <- impute(activity$steps) 
+totalstep_impute <- aggregate(steps ~ date, activity_impute, sum)
+hist(totalstep_impute$steps,xlab = "Total Steps per Day (impute missing value)",main = "Histogram of Total Steps")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
 ## Are there differences in activity patterns between weekdays and weekends?
+
 
 ```r
 activity$week <- weekdays(as.Date(activity$date))

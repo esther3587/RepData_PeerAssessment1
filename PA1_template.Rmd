@@ -7,33 +7,46 @@ output:
 
 
 ## Loading and preprocessing the data
+
 ```{r echo=TRUE}
 activity <- read.csv("activity.csv")
 ```
 
 
 ## What is mean total number of steps taken per day?
+
 ```{r echo=TRUE}
-totalstep <- as.data.frame(xtabs(steps ~ date,activity))
-hist(totalstep$Freq)
-mean(totalstep$Freq)
-median(totalstep$Freq)
+totalstep <- aggregate(steps ~ date, activity, sum)
+hist(totalstep$steps)
+mean(totalstep$steps) 
+median(totalstep$steps)
 ```
 
 ## What is the average daily activity pattern?
 
 ```{r echo=TRUE}
-plot(activity$interval,activity$steps,type="l")
+steps_per_interval <- aggregate(steps~interval,activity,mean)
+plot(steps_per_interval,type='l')
+steps_per_interval$interval[which.max(steps_per_interval$steps)]
 ```
 
 ## Imputing missing values
+
 ```{r echo=TRUE}
+library(Hmisc)
 sum(is.na(activity))
+activity_impute <- activity
+activity_impute$steps <- impute(activity$steps) 
+totalstep_impute <- aggregate(steps ~ date, activity_impute, sum)
+hist(totalstep_impute$steps,xlab = "Total Steps per Day (impute missing value)",main = "Histogram of Total Steps")
 ```
+
 ## Are there differences in activity patterns between weekdays and weekends?
+
 ```{r echo=TRUE}
 activity$week <- weekdays(as.Date(activity$date))
 weekdays1 <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
 activity$wDay <- factor(activity$week %in% weekdays1, levels = c(FALSE,TRUE), labels = c('weekend','weekday'))
+
 ```
 
